@@ -1,17 +1,19 @@
 import { Router } from "express";
 import { UsuariosController } from "../controller/UsuariosController";
+import { checkJwt } from "../middleware/jwt";
+import { checkRole } from "../middleware/role";
 
 const router= Router();
 
 //obtiene todos
-router.get('/', UsuariosController.getAll);
+router.get( '/',[checkJwt, checkRole(['user'])], UsuariosController.getAll);
 //obtiene 1 especifico mediante id
-router.get('/:id', UsuariosController.getById);
+router.get('/:id',[checkJwt, checkRole(['admin', 'user'])], UsuariosController.getById);
 //crear
-router.post('/', UsuariosController.new);
+router.post('/',[checkJwt, checkRole(['admin'])], UsuariosController.new);
 //modifica
-router.patch('/:id', UsuariosController.modify);
+router.patch('/:id',[checkJwt, checkRole(['admin'])], UsuariosController.modify);
 //elimina
-router.delete('/:id', UsuariosController.delete);
+router.delete('/:id',[checkJwt, checkRole(['admin'])], UsuariosController.delete);
 
 export default router;

@@ -36,6 +36,9 @@ export class Usuarios{
     @MinLength(6)
     password: string;
 
+    @Column()    
+    role: string;
+
     @Column()
     @IsNotEmpty()
     estado: boolean;
@@ -43,6 +46,11 @@ export class Usuarios{
     hashPassword():void{
         const salt= bcrypt.genSaltSync(10);
         this.password= bcrypt.hashSync(this.password, salt);
+    }
+
+    checkPassword(password:string): boolean {
+        return bcrypt.compareSync(password, this.password);
+
     }
 
 
